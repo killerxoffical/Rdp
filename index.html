@@ -1368,6 +1368,48 @@
         }
         #chart-canvas { position: absolute; top: 0; left: 35px; width: calc(100% - 35px); height: 100%; background-color: var(--bg-color); cursor: grab; touch-action: none; overscroll-behavior: none; }
         #chart-canvas:active { cursor: grabbing; }
+
+        #drawing-canvas { position: absolute; top: 0; left: 35px; width: calc(100% - 35px); height: 100%; background: transparent; z-index: 24; touch-action: none; overscroll-behavior: none; }
+        .drawing-tool-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+        .drawing-tool-btn {
+            background: linear-gradient(145deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            border-radius: 12px;
+            padding: 12px 10px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            text-align: left;
+            cursor: pointer;
+            min-height: 48px;
+            transition: all 0.2s ease;
+        }
+        .drawing-tool-btn.active {
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 1px rgba(41,98,255,0.22), 0 8px 18px rgba(41,98,255,0.18);
+            background: linear-gradient(145deg, rgba(41,98,255,0.16), rgba(255,255,255,0.04));
+        }
+        .drawing-tool-btn.danger {
+            border-color: rgba(255,59,48,0.32);
+            color: #ff8d87;
+        }
+        .drawing-tools-help {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            line-height: 1.55;
+            margin-top: 4px;
+        }
+        .drawing-tools-section-title {
+            margin: 0 0 12px 0;
+            font-size: 0.95rem;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            color: var(--text-secondary);
+        }
         #chart-loader-overlay { position: absolute; inset: 0; background: rgba(13,15,17,0.92); z-index: 50; display: flex; justify-content: center; align-items: center; color: var(--text-primary); backdrop-filter: blur(8px); }
         #chart-loader-overlay .premium-chart-loader {
             display: flex;
@@ -3532,7 +3574,7 @@
         
         .pc-asset-info { display: none; }
         .chart-section { min-height: 260px; }
-        #chart-canvas { touch-action: none; }
+        #chart-canvas, #drawing-canvas { touch-action: none; }
         @media (min-width: 1024px), (orientation: landscape) and (max-width: 1023px) {
             .pc-asset-info { display: block; }
         }
@@ -3596,7 +3638,7 @@
             main { display: contents !important; }
             #view-chart { display: contents !important; }
             .chart-section { grid-area: chart; min-height: 0; height: 100%; }
-            #chart-canvas { left: 0 !important; width: 100% !important; height: 100% !important; }
+            #chart-canvas, #drawing-canvas { left: 0 !important; width: 100% !important; height: 100% !important; }
             .controls-section.new-controls {
                 grid-area: rightpanel;
                 height: 100vh !important;
@@ -3784,27 +3826,7 @@
             border-radius: 14px !important;
         }
 
-	
-        /* PWA Install Button */
-        #pwa-install-btn {
-            position: fixed;
-            right: 16px;
-            bottom: 88px;
-            z-index: 1200;
-            border: none;
-            border-radius: 999px;
-            padding: 12px 16px;
-            font-weight: 800;
-            font-size: 0.95rem;
-            color: #fff;
-            background: linear-gradient(135deg, #2962ff, #00c853);
-            box-shadow: 0 10px 24px rgba(0,0,0,0.35);
-            display: none;
-        }
-        #pwa-install-btn.show { display: inline-flex; align-items: center; gap: 8px; }
-        #pwa-install-btn svg { width: 18px; height: 18px; }
-
-</style>
+	</style>
     <link rel="preload" as="image" href="https://pub-900565f10d704c19a4c2594112330aae.r2.dev/utils/1774140253150_1000258938.png">
 
 <style id="mobile-only-enforcer-style">
@@ -3904,37 +3926,7 @@
             display: none !important;
         }
     }
-
-        /* PWA Install Button */
-        #pwa-install-btn {
-            position: fixed;
-            right: 16px;
-            bottom: 88px;
-            z-index: 1200;
-            border: none;
-            border-radius: 999px;
-            padding: 12px 16px;
-            font-weight: 800;
-            font-size: 0.95rem;
-            color: #fff;
-            background: linear-gradient(135deg, #2962ff, #00c853);
-            box-shadow: 0 10px 24px rgba(0,0,0,0.35);
-            display: none;
-        }
-        #pwa-install-btn.show { display: inline-flex; align-items: center; gap: 8px; }
-        #pwa-install-btn svg { width: 18px; height: 18px; }
-
 </style>
-
-
-    <link rel="manifest" href="/Rdp/manifest.json">
-    <link rel="icon" type="image/png" sizes="192x192" href="/Rdp/icons/icon-192.png">
-    <link rel="apple-touch-icon" href="/Rdp/icons/icon-192.png">
-    <meta name="theme-color" content="#0D0F11">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="ICTEX">
-    <link rel="apple-touch-icon" href="icons/icon-192.png">
 
 </head>
 <body>
@@ -4163,6 +4155,7 @@
                         </div>
                         <div id="chart-utc-time-display"></div>
                         <canvas id="chart-canvas"></canvas>
+                        <canvas id="drawing-canvas"></canvas>
                         <div id="chart-loader-overlay">
                            <div class="premium-chart-loader">
                                <div class="ictex-loader medium loader-host" data-loader-size="medium"></div>
@@ -5034,11 +5027,15 @@
                 <div class="modal-content">
                     <div class="bottom-sheet-handle"></div>
                     <div class="chart-tools-header">
-                        <h3 style="font-size: 1.1rem; font-weight: 500; padding-left: 10px;">Indicators</h3>
+                        <h3 style="font-size: 1.1rem; font-weight: 500; padding-left: 10px;">Chart Tools</h3>
                         <button id="chart-tools-close-btn">&times;</button>
                     </div>
                     <div class="chart-tools-body">
                         <div class="chart-tools-content active" id="tools-tab-indicators">
+                            <h4 class="drawing-tools-section-title">DRAWING TOOLS</h4>
+                            <div class="drawing-tool-grid" id="drawing-tool-grid"></div>
+                            <div class="drawing-tools-help" id="drawing-tool-help">Select a tool, then tap on the chart to place points. Use Select to move lines and anchors easily.</div>
+                            <h4 class="drawing-tools-section-title" style="margin-top:18px;">INDICATORS</h4>
                             <ul class="indicator-list" id="indicator-list">
                             </ul>
                         </div>
@@ -5539,6 +5536,7 @@
         const backToLoginBtn = document.getElementById('back-to-login');
         const logoutButton = document.getElementById('logout-button');
         const canvas = document.getElementById('chart-canvas'), ctx = canvas.getContext('2d');
+        const drawingCanvas = document.getElementById('drawing-canvas'), drawingCtx = drawingCanvas.getContext('2d');
         const chartLoaderOverlay = document.getElementById('chart-loader-overlay');
         const chartLoaderTitle = document.getElementById('chart-loader-title');
         const chartLoaderSubtitle = document.getElementById('chart-loader-subtitle');
@@ -5863,6 +5861,8 @@
         const chartToolsModal = document.getElementById('chart-tools-modal');
         const chartToolsCloseBtn = document.getElementById('chart-tools-close-btn');
         const indicatorList = document.getElementById('indicator-list');
+        const drawingToolGrid = document.getElementById('drawing-tool-grid');
+        const drawingToolHelp = document.getElementById('drawing-tool-help');
         const tradeOptionsModal = document.getElementById('trade-options-modal');
         
         const expiryMinusBtn = document.getElementById('expiry-minus-btn');
@@ -5904,6 +5904,28 @@
         let panStartX = 0, scaleStartY = 0, initialPinchDistance = 0, panDragDistance = 0, viewOffset = 0;
         let panVelocity = 0, lastPanMoveAt = 0;
         let visibleCandles = 12, verticalZoomFactor = 1.0;
+        const DRAWING_TOOL_DEFS = [
+            { id: 'select', label: 'Select / Move', points: 0, help: 'Tap a drawing or anchor point, then drag to move it.' },
+            { id: 'horizontalLine', label: 'Horizontal Line', points: 1, help: 'Tap once to place a horizontal support or resistance line.' },
+            { id: 'verticalLine', label: 'Vertical Line', points: 1, help: 'Tap once to place a vertical time marker.' },
+            { id: 'ray', label: 'Ray', points: 2, help: 'Tap two points to create a ray that extends to the right.' },
+            { id: 'tradeLine', label: 'Trade Line', points: 2, help: 'Tap two points to place a standard trend or trade line.' },
+            { id: 'tradeAngle', label: 'Trade Angle', points: 3, help: 'Tap three points to build an angle from one origin.' },
+            { id: 'parallelChannel', label: 'Parallel Channel', points: 3, help: 'Tap two points for the base line, then a third to set channel width.' },
+            { id: 'priceRange', label: 'Price Range', points: 2, help: 'Tap two opposite corners to create a premium price range box.' },
+            { id: 'arc', label: 'Arc', points: 3, help: 'Tap start, end, and curve height points.' },
+            { id: 'crossLine', label: 'Cross Line', points: 1, help: 'Tap once to place a full crosshair marker.' },
+            { id: 'curve', label: 'Curve', points: 4, help: 'Tap up to four points to create a smooth curve.' }
+        ];
+        let chartViewport = null;
+        const drawingState = {
+            activeTool: 'select',
+            drawings: [],
+            previewPoints: [],
+            selectedId: null,
+            drag: null,
+            isDrawingGesture: false
+        };
         let candlesRef, scheduleRef, isAppInitialized = false, isSyncing = false;
         let marketPatternConfig = null;
         let currentUserData = null;
@@ -8763,6 +8785,17 @@ Balance: ${balance.toFixed(2)} USDT
         const cS = cW * 0.2;
         const xShift = -(fractionalOffset + extraLeft) * cW;
 
+        chartViewport = {
+            minPrice: minP,
+            maxPrice: maxP,
+            mainChartHeight,
+            chartDrawWidth,
+            candleWidth: cW,
+            xShift,
+            sliceStart,
+            visibleDataLength: vC.length
+        };
+
         drawGrid(minP, maxP, chartDrawWidth, vC, cW, mainChartHeight, xShift);
 
         vC.forEach((c, i) => {
@@ -8799,10 +8832,221 @@ Balance: ${balance.toFixed(2)} USDT
             }
         });
 
+        renderDrawingLayer();
         if (liveCandle) drawCurrentPriceLine(liveCandle.close, minP, maxP, chartDrawWidth, mainChartHeight, cW, vC.length, xShift);
         if (wholeOffset === 0 && liveCandle) drawCandleEndTimer(liveCandle, minP, maxP, mainChartHeight, cW, vC.length, xShift);
     }
-    function resizeCanvas(){if(currentView !== 'chart' || !mainAppWrapper.style.display || mainAppWrapper.style.display === 'none') return; canvasWidth=canvas.clientWidth;canvasHeight=canvas.clientHeight;canvas.width=canvasWidth*devicePixelRatio;canvas.height=canvasHeight*devicePixelRatio;ctx.scale(devicePixelRatio,devicePixelRatio);}
+
+    function getDrawingToolDef(id) { return DRAWING_TOOL_DEFS.find(tool => tool.id === id) || DRAWING_TOOL_DEFS[0]; }
+    function setActiveDrawingTool(toolId) {
+        drawingState.activeTool = toolId;
+        drawingState.previewPoints = [];
+        drawingState.drag = null;
+        drawingState.isDrawingGesture = false;
+        const tool = getDrawingToolDef(toolId);
+        if (drawingToolHelp) drawingToolHelp.textContent = tool.help;
+        if (drawingToolGrid) {
+            drawingToolGrid.querySelectorAll('.drawing-tool-btn[data-tool]').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.tool === toolId);
+            });
+        }
+        renderDrawingLayer();
+    }
+    function initDrawingToolbar() {
+        if (!drawingToolGrid || drawingToolGrid.dataset.ready === '1') return;
+        drawingToolGrid.dataset.ready = '1';
+        const toolsMarkup = DRAWING_TOOL_DEFS.map(tool => `<button class="drawing-tool-btn${tool.id === 'select' ? ' active' : ''}" data-tool="${tool.id}">${tool.label}</button>`).join('') + `<button class="drawing-tool-btn" id="drawing-clear-selected-btn">Delete Selected</button><button class="drawing-tool-btn danger" id="drawing-clear-all-btn">Clear All</button>`;
+        drawingToolGrid.innerHTML = toolsMarkup;
+        drawingToolGrid.addEventListener('click', (e) => {
+            const toolBtn = e.target.closest('.drawing-tool-btn[data-tool]');
+            if (toolBtn) {
+                setActiveDrawingTool(toolBtn.dataset.tool);
+                return;
+            }
+            if (e.target.id === 'drawing-clear-selected-btn') {
+                if (drawingState.selectedId) {
+                    drawingState.drawings = drawingState.drawings.filter(d => d.id !== drawingState.selectedId);
+                    drawingState.selectedId = null;
+                    renderDrawingLayer();
+                }
+                return;
+            }
+            if (e.target.id === 'drawing-clear-all-btn') {
+                drawingState.drawings = [];
+                drawingState.previewPoints = [];
+                drawingState.selectedId = null;
+                renderDrawingLayer();
+            }
+        });
+        setActiveDrawingTool('select');
+    }
+    function generateDrawingId() { return `draw_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`; }
+    function clonePoint(p) { return { x: p.x, y: p.y }; }
+    function getEventPoint(e) {
+        const rect = drawingCanvas.getBoundingClientRect();
+        const src = e.touches ? e.touches[0] : e;
+        return { x: src.clientX - rect.left, y: src.clientY - rect.top };
+    }
+    function screenToData(pt) {
+        if (!chartViewport) return null;
+        const x = Math.max(0, Math.min(chartViewport.chartDrawWidth, pt.x));
+        const y = Math.max(0, Math.min(chartViewport.mainChartHeight, pt.y));
+        const dataIndex = chartViewport.sliceStart + ((x - chartViewport.xShift) / chartViewport.candleWidth);
+        const price = chartViewport.maxPrice - (y / chartViewport.mainChartHeight) * (chartViewport.maxPrice - chartViewport.minPrice);
+        return { x, y, dataIndex, price };
+    }
+    function dataToScreen(point) {
+        if (!chartViewport || !point) return null;
+        const x = ((point.dataIndex - chartViewport.sliceStart) * chartViewport.candleWidth) + chartViewport.xShift;
+        const y = ((chartViewport.maxPrice - point.price) / (chartViewport.maxPrice - chartViewport.minPrice)) * chartViewport.mainChartHeight;
+        return { x, y };
+    }
+    function createDrawing(toolId, points) {
+        return { id: generateDrawingId(), type: toolId, points: points.map(clonePoint) };
+    }
+    function distanceToSegment(px, py, x1, y1, x2, y2) {
+        const dx = x2 - x1, dy = y2 - y1;
+        if (dx === 0 && dy === 0) return Math.hypot(px - x1, py - y1);
+        const t = Math.max(0, Math.min(1, ((px - x1) * dx + (py - y1) * dy) / (dx * dx + dy * dy)));
+        const cx = x1 + t * dx, cy = y1 + t * dy;
+        return Math.hypot(px - cx, py - cy);
+    }
+    function getParallelChannelPoints(points) {
+        if (points.length < 3) return null;
+        const a = dataToScreen(points[0]), b = dataToScreen(points[1]), c = dataToScreen(points[2]);
+        if (!a || !b || !c) return null;
+        const dx = b.x - a.x, dy = b.y - a.y;
+        const len = Math.hypot(dx, dy) || 1;
+        const nx = -dy / len, ny = dx / len;
+        const offset = ((c.x - a.x) * nx) + ((c.y - a.y) * ny);
+        return { a, b, c, a2: { x: a.x + nx * offset, y: a.y + ny * offset }, b2: { x: b.x + nx * offset, y: b.y + ny * offset } };
+    }
+    function getDrawingHitTarget(screenPt) {
+        const anchorRadius = 12;
+        for (let i = drawingState.drawings.length - 1; i >= 0; i--) {
+            const drawing = drawingState.drawings[i];
+            const screenPoints = drawing.points.map(dataToScreen).filter(Boolean);
+            for (let p = 0; p < screenPoints.length; p++) {
+                if (Math.hypot(screenPt.x - screenPoints[p].x, screenPt.y - screenPoints[p].y) <= anchorRadius) {
+                    return { drawingId: drawing.id, pointIndex: p, mode: 'point' };
+                }
+            }
+            let hit = false;
+            if (drawing.type === 'horizontalLine' && screenPoints[0]) hit = Math.abs(screenPt.y - screenPoints[0].y) <= 10;
+            else if (drawing.type === 'verticalLine' && screenPoints[0]) hit = Math.abs(screenPt.x - screenPoints[0].x) <= 10;
+            else if (drawing.type === 'crossLine' && screenPoints[0]) hit = Math.abs(screenPt.x - screenPoints[0].x) <= 10 || Math.abs(screenPt.y - screenPoints[0].y) <= 10;
+            else if ((drawing.type === 'tradeLine' || drawing.type === 'ray') && screenPoints.length >= 2) hit = distanceToSegment(screenPt.x, screenPt.y, screenPoints[0].x, screenPoints[0].y, screenPoints[1].x, screenPoints[1].y) <= 10;
+            else if (drawing.type === 'priceRange' && screenPoints.length >= 2) {
+                const left = Math.min(screenPoints[0].x, screenPoints[1].x), right = Math.max(screenPoints[0].x, screenPoints[1].x), top = Math.min(screenPoints[0].y, screenPoints[1].y), bottom = Math.max(screenPoints[0].y, screenPoints[1].y);
+                hit = screenPt.x >= left - 8 && screenPt.x <= right + 8 && screenPt.y >= top - 8 && screenPt.y <= bottom + 8;
+            } else if (drawing.type === 'parallelChannel') {
+                const pc = getParallelChannelPoints(drawing.points);
+                if (pc) hit = distanceToSegment(screenPt.x, screenPt.y, pc.a.x, pc.a.y, pc.b.x, pc.b.y) <= 10 || distanceToSegment(screenPt.x, screenPt.y, pc.a2.x, pc.a2.y, pc.b2.x, pc.b2.y) <= 10;
+            } else if (drawing.type === 'tradeAngle' && screenPoints.length >= 3) {
+                hit = distanceToSegment(screenPt.x, screenPt.y, screenPoints[0].x, screenPoints[0].y, screenPoints[1].x, screenPoints[1].y) <= 10 || distanceToSegment(screenPt.x, screenPt.y, screenPoints[0].x, screenPoints[0].y, screenPoints[2].x, screenPoints[2].y) <= 10;
+            } else if (drawing.type === 'arc' && screenPoints.length >= 3) {
+                const minX = Math.min(...screenPoints.map(p => p.x)) - 12, maxX = Math.max(...screenPoints.map(p => p.x)) + 12, minY = Math.min(...screenPoints.map(p => p.y)) - 12, maxY = Math.max(...screenPoints.map(p => p.y)) + 12;
+                hit = screenPt.x >= minX && screenPt.x <= maxX && screenPt.y >= minY && screenPt.y <= maxY;
+            } else if (drawing.type === 'curve' && screenPoints.length >= 2) {
+                for (let j = 0; j < screenPoints.length - 1; j++) {
+                    if (distanceToSegment(screenPt.x, screenPt.y, screenPoints[j].x, screenPoints[j].y, screenPoints[j+1].x, screenPoints[j+1].y) <= 10) { hit = true; break; }
+                }
+            }
+            if (hit) return { drawingId: drawing.id, pointIndex: -1, mode: 'drawing' };
+        }
+        return null;
+    }
+    function moveDrawingByDelta(drawing, dxIndex, dPrice) {
+        drawing.points.forEach(pt => {
+            pt.dataIndex += dxIndex;
+            pt.price += dPrice;
+        });
+    }
+    function renderDrawingLayer() {
+        if (!drawingCtx || !drawingCanvas.width) return;
+        drawingCtx.clearRect(0, 0, canvasWidth, canvasHeight);
+        if (!chartViewport) return;
+        const drawOne = (drawing, isPreview = false) => {
+            const selected = !isPreview && drawing.id === drawingState.selectedId;
+            const points = drawing.points.map(dataToScreen).filter(Boolean);
+            if (!points.length) return;
+            const stroke = selected ? '#8bb2ff' : (isPreview ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.92)');
+            const fill = selected ? 'rgba(41,98,255,0.12)' : 'rgba(41,98,255,0.10)';
+            drawingCtx.save();
+            drawingCtx.strokeStyle = stroke;
+            drawingCtx.fillStyle = fill;
+            drawingCtx.lineWidth = selected ? 2.2 : 1.6;
+            drawingCtx.setLineDash(isPreview ? [6, 6] : []);
+            const p0 = points[0], p1 = points[1], p2 = points[2];
+            switch (drawing.type) {
+                case 'horizontalLine':
+                    drawingCtx.beginPath(); drawingCtx.moveTo(0, p0.y); drawingCtx.lineTo(chartViewport.chartDrawWidth, p0.y); drawingCtx.stroke();
+                    break;
+                case 'verticalLine':
+                    drawingCtx.beginPath(); drawingCtx.moveTo(p0.x, 0); drawingCtx.lineTo(p0.x, chartViewport.mainChartHeight); drawingCtx.stroke();
+                    break;
+                case 'crossLine':
+                    drawingCtx.beginPath(); drawingCtx.moveTo(0, p0.y); drawingCtx.lineTo(chartViewport.chartDrawWidth, p0.y); drawingCtx.moveTo(p0.x, 0); drawingCtx.lineTo(p0.x, chartViewport.mainChartHeight); drawingCtx.stroke();
+                    break;
+                case 'tradeLine':
+                    if (p1) { drawingCtx.beginPath(); drawingCtx.moveTo(p0.x, p0.y); drawingCtx.lineTo(p1.x, p1.y); drawingCtx.stroke(); }
+                    break;
+                case 'ray':
+                    if (p1) {
+                        const dx = p1.x - p0.x, dy = p1.y - p0.y, len = Math.hypot(dx, dy) || 1;
+                        const ex = p1.x + (dx / len) * 3000, ey = p1.y + (dy / len) * 3000;
+                        drawingCtx.beginPath(); drawingCtx.moveTo(p0.x, p0.y); drawingCtx.lineTo(ex, ey); drawingCtx.stroke();
+                    }
+                    break;
+                case 'tradeAngle':
+                    if (p1 && p2) { drawingCtx.beginPath(); drawingCtx.moveTo(p0.x, p0.y); drawingCtx.lineTo(p1.x, p1.y); drawingCtx.moveTo(p0.x, p0.y); drawingCtx.lineTo(p2.x, p2.y); drawingCtx.stroke(); }
+                    break;
+                case 'parallelChannel': {
+                    const pc = getParallelChannelPoints(drawing.points);
+                    if (pc) {
+                        drawingCtx.beginPath(); drawingCtx.moveTo(pc.a.x, pc.a.y); drawingCtx.lineTo(pc.b.x, pc.b.y); drawingCtx.moveTo(pc.a2.x, pc.a2.y); drawingCtx.lineTo(pc.b2.x, pc.b2.y); drawingCtx.stroke();
+                        drawingCtx.fillStyle = selected ? 'rgba(41,98,255,0.16)' : 'rgba(41,98,255,0.10)';
+                        drawingCtx.beginPath(); drawingCtx.moveTo(pc.a.x, pc.a.y); drawingCtx.lineTo(pc.b.x, pc.b.y); drawingCtx.lineTo(pc.b2.x, pc.b2.y); drawingCtx.lineTo(pc.a2.x, pc.a2.y); drawingCtx.closePath(); drawingCtx.fill();
+                    }
+                    break;
+                }
+                case 'priceRange':
+                    if (p1) {
+                        const left = Math.min(p0.x, p1.x), top = Math.min(p0.y, p1.y), width = Math.abs(p1.x - p0.x), height = Math.abs(p1.y - p0.y);
+                        drawingCtx.fillRect(left, top, width, height); drawingCtx.strokeRect(left, top, width, height);
+                        const diff = Math.abs(drawing.points[1].price - drawing.points[0].price);
+                        drawingCtx.fillStyle = '#EAECEF'; drawingCtx.font = '700 11px Inter'; drawingCtx.fillText(diff.toFixed(4), left + 8, top + 16);
+                    }
+                    break;
+                case 'arc':
+                    if (p1 && p2) { drawingCtx.beginPath(); drawingCtx.moveTo(p0.x, p0.y); drawingCtx.quadraticCurveTo(p2.x, p2.y, p1.x, p1.y); drawingCtx.stroke(); }
+                    break;
+                case 'curve':
+                    if (points.length >= 2) {
+                        drawingCtx.beginPath(); drawingCtx.moveTo(points[0].x, points[0].y);
+                        for (let i = 1; i < points.length - 1; i++) {
+                            const midX = (points[i].x + points[i + 1].x) / 2, midY = (points[i].y + points[i + 1].y) / 2;
+                            drawingCtx.quadraticCurveTo(points[i].x, points[i].y, midX, midY);
+                        }
+                        const last = points[points.length - 1];
+                        drawingCtx.lineTo(last.x, last.y);
+                        drawingCtx.stroke();
+                    }
+                    break;
+            }
+            if (selected || isPreview) {
+                drawingCtx.setLineDash([]);
+                points.forEach(p => {
+                    drawingCtx.beginPath(); drawingCtx.fillStyle = '#0D0F11'; drawingCtx.strokeStyle = '#8bb2ff'; drawingCtx.lineWidth = 2;
+                    drawingCtx.arc(p.x, p.y, 5, 0, Math.PI * 2); drawingCtx.fill(); drawingCtx.stroke();
+                });
+            }
+            drawingCtx.restore();
+        };
+        drawingState.drawings.forEach(d => drawOne(d));
+        if (drawingState.previewPoints.length) drawOne({ id: 'preview', type: drawingState.activeTool, points: drawingState.previewPoints }, true);
+    }
+    function resizeCanvas(){if(currentView !== 'chart' || !mainAppWrapper.style.display || mainAppWrapper.style.display === 'none') return; canvasWidth=canvas.clientWidth;canvasHeight=canvas.clientHeight; canvas.width=canvasWidth*devicePixelRatio;canvas.height=canvasHeight*devicePixelRatio; drawingCanvas.width=canvasWidth*devicePixelRatio; drawingCanvas.height=canvasHeight*devicePixelRatio; ctx.setTransform(1,0,0,1,0,0); drawingCtx.setTransform(1,0,0,1,0,0); ctx.scale(devicePixelRatio,devicePixelRatio); drawingCtx.scale(devicePixelRatio,devicePixelRatio);}
     function drawCandle(c,x,w,s,minP,maxP,cH){const yO=((maxP-c.open)/(maxP-minP))*cH,yC=((maxP-c.close)/(maxP-minP))*cH,yH=((maxP-c.high)/(maxP-minP))*cH,yL=((maxP-c.low)/(maxP-minP))*cH;const color=c.close>=c.open?chartSettings.colors.up:chartSettings.colors.down;ctx.fillStyle=color;ctx.strokeStyle=color;ctx.lineWidth=1.8;ctx.beginPath();ctx.moveTo(x+w/2,yH);ctx.lineTo(x+w/2,yL);ctx.stroke();ctx.fillRect(x+s/2,Math.min(yO,yC),w-s,Math.max(1,Math.abs(yO-yC)));}
     
     function getDynamicGridInterval(visibleCandles) {
@@ -9327,22 +9571,69 @@ Balance: ${balance.toFixed(2)} USDT
     }
     
     function getPinchDistance(touches) { const dx = touches[0].clientX - touches[1].clientX; const dy = touches[0].clientY - touches[1].clientY; return Math.sqrt(dx * dx + dy * dy); }
+    
     function handlePointerDown(e) { 
         e.preventDefault(); 
         stopPanMomentum();
-        if (e.touches && e.touches.length === 2) { isPinching = true; isPanning = false; isScaling = false; initialPinchDistance = getPinchDistance(e.touches); return; } 
-        const rect = canvas.getBoundingClientRect(); 
-        const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left; 
-        const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top; 
+        if (e.touches && e.touches.length === 2) { isPinching = true; isPanning = false; isScaling = false; initialPinchDistance = getPinchDistance(e.touches); return; }
+        const pt = getEventPoint(e);
+        const dataPoint = screenToData(pt);
+        if (!dataPoint) return;
+        if (drawingState.activeTool !== 'select') {
+            drawingState.isDrawingGesture = true;
+            drawingState.previewPoints.push(dataPoint);
+            const def = getDrawingToolDef(drawingState.activeTool);
+            if (drawingState.previewPoints.length >= def.points) {
+                const finalPoints = drawingState.activeTool === 'curve' ? drawingState.previewPoints.slice(0, 4) : drawingState.previewPoints.slice(0, def.points);
+                const drawing = createDrawing(drawingState.activeTool, finalPoints);
+                drawingState.drawings.push(drawing);
+                drawingState.selectedId = drawing.id;
+                drawingState.previewPoints = [];
+                setActiveDrawingTool('select');
+            }
+            renderDrawingLayer();
+            return;
+        }
+        const hit = getDrawingHitTarget(pt);
+        if (hit) {
+            drawingState.selectedId = hit.drawingId;
+            drawingState.drag = {
+                ...hit,
+                startScreen: pt,
+                startData: dataPoint,
+                snapshot: JSON.parse(JSON.stringify(drawingState.drawings.find(d => d.id === hit.drawingId)))
+            };
+            renderDrawingLayer();
+            return;
+        }
+        const x = pt.x, y = pt.y;
         if (x > canvas.clientWidth - RIGHT_PADDING) { isScaling = true; scaleStartY = y; canvas.style.cursor = 'ns-resize'; } 
-        else { isPanning = true; panStartX = x; lastPanMoveAt = performance.now(); canvas.style.cursor = 'grabbing'; notificationContainer.style.opacity = '0'; } 
+        else { isPanning = true; panStartX = x; lastPanMoveAt = performance.now(); canvas.style.cursor = 'grabbing'; notificationContainer.style.opacity = '0'; }
     }
     function handlePointerUp() { 
-        isPanning = false; isScaling = false; isPinching = false; canvas.style.cursor = 'grab'; notificationContainer.style.opacity = '1'; 
+        isPanning = false; isScaling = false; isPinching = false; drawingState.drag = null; drawingState.isDrawingGesture = false; canvas.style.cursor = 'grab'; notificationContainer.style.opacity = '1'; 
     }
     
     function handlePointerMove(e) {
         e.preventDefault();
+        const pt = getEventPoint(e);
+        const dataPoint = screenToData(pt);
+        if (drawingState.drag && dataPoint) {
+            const drawing = drawingState.drawings.find(d => d.id === drawingState.drag.drawingId);
+            if (!drawing) return;
+            const source = drawingState.drag.snapshot;
+            if (drawingState.drag.mode === 'point' && drawingState.drag.pointIndex >= 0) {
+                drawing.points = source.points.map(clonePoint);
+                drawing.points[drawingState.drag.pointIndex] = dataPoint;
+            } else {
+                const dxIndex = dataPoint.dataIndex - drawingState.drag.startData.dataIndex;
+                const dPrice = dataPoint.price - drawingState.drag.startData.price;
+                drawing.points = source.points.map(clonePoint);
+                moveDrawingByDelta(drawing, dxIndex, dPrice);
+            }
+            renderDrawingLayer();
+            return;
+        }
         if (isPinching && e.touches && e.touches.length === 2) {
             const currentPinchDistance = getPinchDistance(e.touches);
             if (initialPinchDistance > 0) {
@@ -9354,17 +9645,14 @@ Balance: ${balance.toFixed(2)} USDT
             } return;
         }
         if (isPinching) return;
-        const rect = canvas.getBoundingClientRect(); const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left; const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+        const x = pt.x, y = pt.y;
         if(isScaling) { const deltaY = y - scaleStartY; const zoomSensitivity = 0.005; verticalZoomFactor += deltaY * zoomSensitivity; verticalZoomFactor = Math.max(1.0, Math.min(verticalZoomFactor, 5.0)); scaleStartY = y; }
         if (isPanning) {
             const deltaX = x - panStartX;
             panStartX = x;
             const candleWidthOnScreen = Math.max(6, (canvas.clientWidth - RIGHT_PADDING) / Math.max(1, visibleCandles));
-            
             const deltaOffset = -deltaX / candleWidthOnScreen;
-            
             applyPanDelta(deltaOffset);
-
             const now = performance.now();
             const elapsed = Math.max(1, now - lastPanMoveAt);
             panVelocity = (deltaOffset / elapsed) * 16;
@@ -10472,27 +10760,7 @@ Please check the admin panel to approve.
                 }
                 .mentor-status-icon.success { background: #00c853; color: white; box-shadow: 0 0 10px rgba(0, 200, 83, 0.3); }
                 .mentor-status-icon svg { width: 16px; height: 16px; }
-            
-        /* PWA Install Button */
-        #pwa-install-btn {
-            position: fixed;
-            right: 16px;
-            bottom: 88px;
-            z-index: 1200;
-            border: none;
-            border-radius: 999px;
-            padding: 12px 16px;
-            font-weight: 800;
-            font-size: 0.95rem;
-            color: #fff;
-            background: linear-gradient(135deg, #2962ff, #00c853);
-            box-shadow: 0 10px 24px rgba(0,0,0,0.35);
-            display: none;
-        }
-        #pwa-install-btn.show { display: inline-flex; align-items: center; gap: 8px; }
-        #pwa-install-btn svg { width: 18px; height: 18px; }
-
-</style>
+            </style>
         `;
     }
 
@@ -11388,11 +11656,16 @@ Please check the admin panel to approve.
         }
 
         gotoLiveBtn.addEventListener('click', () => { viewOffset = 0; gotoLiveBtn.classList.remove('visible'); notificationContainer.style.opacity = '1'; });
-        canvas.addEventListener('mousedown', handlePointerDown); canvas.addEventListener('mouseup', handlePointerUp); canvas.addEventListener('mouseleave', handlePointerUp); canvas.addEventListener('mousemove', handlePointerMove);
-        canvas.addEventListener('touchstart', handlePointerDown, { passive: false });
-        canvas.addEventListener('touchend', handlePointerUp);
-        canvas.addEventListener('touchcancel', handlePointerUp);
-        canvas.addEventListener('touchmove', handlePointerMove, { passive: false });
+        [canvas, drawingCanvas].forEach(activeCanvas => {
+            activeCanvas.addEventListener('mousedown', handlePointerDown);
+            activeCanvas.addEventListener('mouseup', handlePointerUp);
+            activeCanvas.addEventListener('mouseleave', handlePointerUp);
+            activeCanvas.addEventListener('mousemove', handlePointerMove);
+            activeCanvas.addEventListener('touchstart', handlePointerDown, { passive: false });
+            activeCanvas.addEventListener('touchend', handlePointerUp);
+            activeCanvas.addEventListener('touchcancel', handlePointerUp);
+            activeCanvas.addEventListener('touchmove', handlePointerMove, { passive: false });
+        });
         canvas.addEventListener('wheel', (e) => {
             if (currentView !== 'chart') return;
             e.preventDefault();
@@ -11415,7 +11688,7 @@ Please check the admin panel to approve.
             applyPanDelta(deltaOffset * 0.85);
             panVelocity = deltaOffset * 0.08;
         }, { passive: false });
-        chartToolsBtnNew.addEventListener('click', () => { initChartToolsModal(); chartToolsModal.classList.add('visible'); });
+        chartToolsBtnNew.addEventListener('click', () => { initChartToolsModal(); initDrawingToolbar(); chartToolsModal.classList.add('visible'); });
         chartToolsCloseBtn.addEventListener('click', () => chartToolsModal.classList.remove('visible'));
         chartToolsModal.addEventListener('click', e => { if (e.target === chartToolsModal) chartToolsModal.classList.remove('visible'); });
         
@@ -12598,90 +12871,5 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
-
-<button id="pwa-install-btn" aria-label="Install App">
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 16l4-5h-3V4h-2v7H8l4 5zm-7 2h14v2H5v-2z"/></svg>
-  Install App
-</button>
-
-
-<script>
-(function(){
-  let deferredPrompt = null;
-  const installBtn = document.getElementById('pwa-install-btn');
-
-  function showInstallButton(){
-    if (installBtn) installBtn.classList.add('show');
-  }
-  function hideInstallButton(){
-    if (installBtn) installBtn.classList.remove('show');
-  }
-
-  window.addEventListener('beforeinstallprompt', function(e){
-    e.preventDefault();
-    deferredPrompt = e;
-    showInstallButton();
-  });
-
-  if (installBtn) {
-    installBtn.addEventListener('click', async function(){
-      try {
-        if (!deferredPrompt) {
-          alert('Install option ekhono ready hoyni. Site ta HTTPS e host korte hobe, ar browser e kichukhon use korar por option ashbe.');
-          return;
-        }
-        deferredPrompt.prompt();
-        const choice = await deferredPrompt.userChoice;
-        if (choice && choice.outcome) console.log('PWA install choice:', choice.outcome);
-        deferredPrompt = null;
-        hideInstallButton();
-      } catch(err) {
-        console.error('Install prompt failed:', err);
-      }
-    });
-  }
-
-  window.addEventListener('appinstalled', function(){
-    deferredPrompt = null;
-    hideInstallButton();
-    console.log('PWA installed');
-  });
-
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function(){
-      navigator.serviceWorker.register('/Rdp/sw.js', { scope: '/Rdp/' }).then(function(reg){
-        console.log('Service worker registered', reg.scope);
-      }).catch(function(err){
-        console.error('Service worker registration failed', err);
-      });
-    });
-  }
-})();
-</script>
-
-
-<div id="pwa-install-fab" style="display:none;position:fixed;right:16px;bottom:96px;z-index:9998;background:linear-gradient(135deg,#2EEC92,#00C853);color:#fff;padding:12px 16px;border-radius:14px;font-weight:800;box-shadow:0 10px 24px rgba(0,0,0,.28);cursor:pointer;font-family:Inter,sans-serif;">Install App</div>
-<script>
-(function(){
-  let deferredPrompt = null;
-  const btn = document.getElementById('pwa-install-fab');
-  window.addEventListener('beforeinstallprompt', function(e){
-    e.preventDefault();
-    deferredPrompt = e;
-    btn.style.display = 'block';
-  });
-  btn.addEventListener('click', async function(){
-    if(!deferredPrompt) {
-      alert('Install option jodi na ashe, Chrome menu theke Add to Home screen try koro.');
-      return;
-    }
-    deferredPrompt.prompt();
-    try { await deferredPrompt.userChoice; } catch(e) {}
-    deferredPrompt = null;
-    btn.style.display = 'none';
-  });
-  window.addEventListener('appinstalled', function(){ btn.style.display = 'none'; });
-})();
-</script>
 </body>
 </html>
